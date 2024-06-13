@@ -1,0 +1,50 @@
+# Node.js dependencies #
+######################
+node_modules/
+npm-debug.log
+
+
+
+# Build directory #
+###################
+/dist/
+/build/
+/out/
+
+
+
+# Prod bundle #
+###############
+*.bundle.js
+*.bundle.css
+
+# Logs #
+########
+*.log
+*.dat
+*.out
+*.pid
+*.seed
+
+
+# Runtime data #
+################
+pids
+*.pid
+*.seed
+*.pid.lock
+.cache
+.parcel-cache
+
+
+# IDE / Editors #
+#################
+.vscode/
+
+# TypeScript #
+##############
+**/*.tsbuildinfo
+
+# End-of-file fixer #
+#####################
+.editorconfig
