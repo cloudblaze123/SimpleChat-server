@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Example</title>
+    <script>
+        async function fetchMessage() {
+            try {
+                const response = await fetch('http://localhost:3000/api/hello');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const message = await response.text();
+                document.getElementById('message').innerText = message;
+            } catch (error) {
+                console.error('There has been a problem with your fetch operation:', error);
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <button onclick="fetchMessage()">Get Message</button>
+    <div id="message"></div>
+</body>
+
+</html>
