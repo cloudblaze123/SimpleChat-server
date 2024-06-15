@@ -5,25 +5,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fetch Example</title>
+</head>
+
+<body>
+    <button onclick="fetchMessage()">Get Message</button>
+    <div id="get-message">wait for message...</div>
+
+    <input type="text" id="messageInput" placeholder="Enter your message">
+    <button onclick="sendMessage()">Send Message</button>
+    <div id="post-message">wait for sending message...</div>
+
+
     <script>
         async function fetchMessage() {
             try {
-                const response = await fetch('http://localhost:3000/api/hello');
+                const response = await fetch('/api/hello');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 const message = await response.text();
-                document.getElementById('message').innerText = message;
+                document.getElementById('get-message').innerText = message;
             } catch (error) {
                 console.error('There has been a problem with your fetch operation:', error);
             }
         }
     </script>
-</head>
+    
+    <script>
+        async function sendMessage() {
+            const message = document.getElementById('messageInput').value;
+            // console.log(JSON.stringify({ message }));
+            try {
+                const response = await fetch('/api/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message })
+                });
 
-<body>
-    <button onclick="fetchMessage()">Get Message</button>
-    <div id="message"></div>
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const resMessage = await response.text();
+                document.getElementById('post-message').innerText = resMessage;
+                setTimeout(() => {
+                    document.getElementById('post-message').innerText = 'wait for sending message...';
+                }, 1000);
+
+            } catch (error) {
+                console.error('There has been a problem with your fetch operation:', error);
+            }
+        }
+    </script>
 </body>
 
 </html>
