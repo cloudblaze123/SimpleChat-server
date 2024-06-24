@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Message Sender</title>
+</head>
+
+<body>
+    <p>测试消息发送器（MessageSender）</p>
+    <p>按下发送键后，通过服务器的控制台输出查看发送是否成功</p>
+    <input type="text" id="messageInput" placeholder="Enter your message">
+    <button id="sendMessageButton">Send Message</button>
+
+    <script type="module">
+        import {MessageSender} from './message_sender.js';
+        
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
+            const messageSender = new MessageSender();
+            messageSender.sendMessage('/api/send', message);
+        }
+
+        document.getElementById('sendMessageButton').addEventListener('click', sendMessage);
+    </script>
+</body>
+
+</html>

@@ -18,7 +18,8 @@ const port = 3000;
 // 中间件：打印访问用户的信息
 app.use((req, res, next) => {
     const { method, url, headers } = req;
-    console.log(`Request received: Method=${method}, URL=${url}, User-Agent=${headers['user-agent']}`);
+    // console.log(`Request received: Method=${method}, URL=${url}, User-Agent=${headers['user-agent']}`);
+    console.log(`Request received: Method=${method}, URL=${url}`);
     next(); // 继续处理请求
 });
 
