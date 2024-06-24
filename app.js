@@ -45,14 +45,20 @@ app.get('/api/hello', (req, res) => {
 });
 
 
+var messages = [];
+
 // 定义一个路由，接收客户端发送的消息，并将其打印到控制台
 app.post('/api/send', (req, res) => {
     const { message } = req.body;
     console.log(`Received message: ${message}`);
+    messages.push(message);
     res.status(200).send('Message received');
 });
 
-
+// 定义一个路由，返回所有已收到的消息
+app.get('/api/messages', (req, res) => {
+    res.status(200).send(messages);
+});
 
 
 // 让服务器监听指定端口

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Message Sender</title>
+</head>
+
+<body>
+    <p>测试消息请求器（MessageRequestor）</p>
+    <p>按下发送键发送信息，然后按下请求按钮请求服务器上收到的信息</p>
+    <input type="text" id="messageInput" placeholder="Enter your message">
+    <button id="sendMessageButton">Send Message</button>
+    <button id="requestMessageButton">Request Message</button>
+    <p id="receivedMessages">从服务器请求到的信息</p>
+
+    <script type="module">
+        import {MessageSender} from './message_sender.js';
+        import {MessageRequestor} from './message_requestor.js';
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
+            const messageSender = new MessageSender();
+            messageSender.sendMessage('/api/send', message);
+        }
+
+        async function requestMessage() {
+            const messageRequestor = new MessageRequestor();
+            const messages=await messageRequestor.requestMessage('/api/messages');
+            const receivedMessages = document.getElementById('receivedMessages');
+            receivedMessages.innerHTML = messages.toString();
+        }
+
+        document.getElementById('sendMessageButton').addEventListener('click', sendMessage);
+        document.getElementById('requestMessageButton').addEventListener('click', requestMessage);
+    </script>
+</body>
+
+</html>
