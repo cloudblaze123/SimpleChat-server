@@ -1,5 +1,5 @@
 import express from 'express';
-import path from 'path';
+
 
 const app = express();
 const port = 3000;
@@ -14,9 +14,12 @@ app.use((req, res, next) => {
 });
 
 // 使用 Express 内置解析器来解析 JSON
-app.use(express.json());
+// 因为目前前端使用base64编码上传文件，所以这里将上传大小限制改大一些，以便测试
+app.use(express.json( { limit: '10mb' }));
 
 
+
+// 路由
 app.get('/api/hello', (req, res) => {
     res.send('Hello, World!');
 });
@@ -53,6 +56,37 @@ app.get('/api/user/:id', (req, res) => {
         res.status(404).json({ message: 'User not found' }); // 如果没有找到用户，返回404错误
     }
 });
+
+
+
+
+// 消息api
+import { messages as mockMessages } from '@/mocks/messages';
+const messages = mockMessages;
+// 接收文本消息
+app.post('/api/message', (req, res) => {
+    const { sender, receiver, content, timestamp } = req.body; // 从请求参数中获取信息
+    const message = { sender, receiver, content, timestamp }; // 构建消息对象
+    messages.push(message);
+    console.log(`Message received: ${message.content.text}`); // 打印日志
+    res.send('Message received'); // 发送响应
+});
+// 接收图片和视频消息
+app.post('/api/media-message', (req, res) => {
+    const { sender, receiver, content, timestamp } = req.body; // 从请求参数中获取信息
+    const message = { sender, receiver, content, timestamp }; // 构建消息对象
+    messages.push(message);
+    console.log(`Message received: ${message.content.type}`); // 打印日志
+    res.send('Message received'); // 发送响应
+});
+
+// 获取消息列表
+app.get('/api/messages', (req, res) => {
+    res.send(messages); // 发送消息列表
+});
+
+
+
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
