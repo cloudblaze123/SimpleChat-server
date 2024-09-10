@@ -1,4 +1,25 @@
-# api版本的定义
+# SimpleChat-server
+> 一个简单的聊天室服务器 <br>
+> 此为 SimpleChat 的后端项目，前端项目为 [SimpleChat](https://github.com/cloudblaze123/SimpleChat)
+
+## 快速开始
+
+1. 克隆仓库：
+   
+   `git clone https://github.com/cloudblaze123/SimpleChat-server.git`
+
+2. 安装依赖：
+
+    ```sh
+    npm install
+    ```
+
+3. 运行项目：
+    ```sh
+    npm run dev
+    ```
+
+## api版本的定义
 1. api版本由大版本号和小版本号构成，形如 vX.Y，X为大版本号，Y为小版本号。
 
 2. 当 api 有破坏性变化时，比如修改接口参数、返回值等导致前端必须修改才能维持原样功能时，大版本号会逐一增加，如v1.0、v2.0等；
