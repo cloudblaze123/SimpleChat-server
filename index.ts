@@ -1,114 +1,44 @@
 import express from 'express';
 
 
+
+
 const app = express();
 const port = 3000;
 
 
-// 中间件：打印访问用户的信息
-app.use((req, res, next) => {
-    const { method, url, headers } = req;
-    // console.log(`Request received: Method=${method}, URL=${url}, User-Agent=${headers['user-agent']}`);
-    console.log(`Request received: Method=${method}, URL=${url}`);
-    next(); // 继续处理请求
-});
+// 配置中间件
 
-// 使用 Express 内置解析器来解析 JSON
+// 打印访问用户的信息
+import { logUrlAccessInfoMiddleware } from '@/middlewares/logger';
+app.use(logUrlAccessInfoMiddleware);
+
+// 来解析 JSON
 // 因为目前前端使用base64编码上传文件，所以这里将上传大小限制改大一些，以便测试
 app.use(express.json( { limit: '10mb' }));
 
 
 
-// 路由
+
+// 配置路由
+
+// 用来测试的路由
 app.get('/api/hello', (req, res) => {
     res.send('Hello, World!');
 });
 
+// 配置用户信息路由
+import userRouter from '@/routers/user';
+app.use('/', userRouter)
 
-import { users } from '@/mocks/users';
-app.get('/api/users', (req, res) => {
-    res.send(users);
-});
+// 配置聊天消息路由
+import messageRouter from '@/routers/message';
+app.use('/', messageRouter)
 
-// 登陆
-app.post('/api/login', (req, res) => {
-    const { email } = req.body; // 从请求参数中获取用户ID并转换为整数
-    console.log(`User ${email} is trying to log in`); // 打印日志
-    const user = users.find(u => u.email === email); // 查找用户
+// 配置用户联系人路由
+import contactRouter from '@/routers/contact';
+app.use('/', contactRouter)
 
-    if (user) {
-        res.send(user.id); // 如果找到用户，返回用户id
-        console.log(`User ${email} logged in`); // 打印日志
-    } else {
-        res.status(404).json({ message: 'User not found' }); // 如果没有找到用户，返回404错误
-        console.log(`User ${email} failed to log in`); // 打印日志
-    }
-});
-
-// 根据用户ID返回用户信息
-app.get('/api/user/:id', (req, res) => {
-    const userId = req.params.id; // 从请求参数中获取用户ID并转换为整数
-    const user = users.find(u => u.id === userId); // 查找用户
-
-    if (user) {
-        res.send(user); // 如果找到用户，返回用户信息
-    } else {
-        res.status(404).json({ message: 'User not found' }); // 如果没有找到用户，返回404错误
-    }
-});
-
-
-
-
-// 消息api
-import { stringToDate } from '@/utils/date';
-import { Message } from '@/models/Message';
-import { messages as mockMessages } from '@/mocks/messages';
-const messages = mockMessages;
-// 接收文本消息
-app.post('/api/message', (req, res) => {
-    const { senderId, receiverId, content, timestamp } = req.body; // 从请求参数中获取信息
-    const message = new Message(senderId, receiverId, content, stringToDate(timestamp)); // 构建消息对象
-    messages.push(message);
-    console.log(`Message received: ${message.content.text}`); // 打印日志
-    console.log(`timestamp: ${message.timestamp}`); // 打印日志
-    res.send('Message received'); // 发送响应
-});
-// 接收图片和视频消息
-app.post('/api/media-message', (req, res) => {
-    const { senderId, receiverId, content, timestamp } = req.body; // 从请求参数中获取信息
-    const message = new Message(senderId, receiverId, content, stringToDate(timestamp)); // 构建消息对象
-    messages.push(message);
-    console.log(`Message received: ${message.content.type}`); // 打印日志
-    res.send('Message received'); // 发送响应
-});
-
-// 获取消息列表
-app.get('/api/messages', (req, res) => {
-    res.send(messages); // 发送消息列表
-});
-
-// 获取指定日期后的消息（不包含指定日期的消息）
-// 日期使用 UTC 时区
-app.get('/api/messages/:date', (req, res) => {
-    // 年-月-日-时-分-秒-毫秒
-    const dateString = (req.params.date as string); // 从请求参数中获取日期
-    const filteredMessages = messages.filter(m => m.timestamp > stringToDate(dateString)); // 过滤出指定日期后的消息
-    console.log(`Messages after ${dateString}:`, filteredMessages.map((m)=>m.timestamp)); // 打印日志
-    res.send(filteredMessages); // 发送消息列表
-});
-
-
-
-
-import { contacts } from '@/mocks/contacts'
-
-app.get('/api/contacts/:id', (req, res) => {
-    const userId = req.params.id // 从请求参数中获取用户ID并转换为整数)
-    const contactIds = contacts.filter(c => c.userId === userId)[0].contactIds // 获取与该用户有联系的用户ID列表
-    console.log(`User ${userId} has contacts: ${contactIds}`); // 打印日志
-    res.send(contactIds) // 发送联系人ID列表
-})
 
 
 
