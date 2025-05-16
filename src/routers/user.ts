@@ -53,9 +53,10 @@ router.get('/api/search/user', (req, res) => {
 
     keyword = keyword.toLowerCase(); // 转换为小写字母
     const usersFounded = users.filter((u) => {
-        return u.id.includes(keyword) || u.name.includes(keyword)
+        return u.id.includes(keyword) || u.name.toLowerCase().includes(keyword)
     }); // 查找用户
 
+    console.log(`users matched keyword '${keyword}':`, usersFounded.map(u => u.id));
     res.send(usersFounded); // 返回用户信息
 });
 
