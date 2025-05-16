@@ -28,6 +28,18 @@ class User {
         this.location = location;
     }
 
+    static loadFromJSON(json:any) {
+        const user = new User('', '', '');
+        user.id = json.id;
+        user.name = json.name;
+        user.email = json.email;
+        user.signature = json.signature;
+        user.gender = json.gender;
+        user.age = json.age;
+        user.birthday = json.birthday;
+        user.location = json.location;
+        return user;
+    }
 }
 
 export { User };

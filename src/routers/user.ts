@@ -1,10 +1,12 @@
 import { Router } from 'express';
 
 
-
-
 const router = Router();
 
+
+
+
+import { User } from '@/models/User';
 
 import { users } from '@/mocks/users';
 router.get('/api/users', (req, res) => {
@@ -59,6 +61,30 @@ router.get('/api/search/user', (req, res) => {
     console.log(`users matched keyword '${keyword}':`, usersFounded.map(u => u.id));
     res.send(usersFounded); // 返回用户信息
 });
+
+
+
+
+// 注册
+router.post('/api/user', (req, res) => {
+    const userData = req.body; // 从请求参数中获取用户ID并转换为整数
+
+    let maxId = Math.max(...users.map(u => parseInt(u.id))) // 获取最大的用户ID
+    const user = User.loadFromJSON(userData)
+    user.id = String(maxId + 1); // 为新用户分配ID
+    users.push(user)
+
+    const ok = true;
+
+    if (ok) {
+        console.log(`User registered: ${user}`);
+        res.status(201).json({ message: 'User registered successfully' }); // 返回成功信息
+    } else {
+        console.log(`User registration failed: ${user}`);
+        res.status(400).json({ message: 'User registration failed' }); // 返回失败信息
+    }
+});
+
 
 
 
