@@ -41,6 +41,25 @@ router.get('/api/user/:id', (req, res) => {
 });
 
 
+// 根据查询字符串返回匹配的用户列表
+// 目前支持搜索用户ID和用户名
+// 且搜索不区分大小写
+router.get('/api/search/user', (req, res) => {
+    let keyword = req.query.keyword as string; // 从请求参数中获取搜索参数用户ID并转换为整数
+    if (!keyword) {
+        res.status(400).json({ message: 'Keyword is required' }); // 如果没有搜索关键字，返回400错误
+        return;
+    }
+
+    keyword = keyword.toLowerCase(); // 转换为小写字母
+    const usersFounded = users.filter((u) => {
+        return u.id.includes(keyword) || u.name.includes(keyword)
+    }); // 查找用户
+
+    res.send(usersFounded); // 返回用户信息
+});
+
+
 
 
 // 修改信息
