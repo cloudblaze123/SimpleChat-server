@@ -16,6 +16,11 @@ router.get('/api/contacts/:id', (req, res) => {
 })
 
 
+
+
+import { getSocket } from '@/stores/socket';
+
+
 // 添加好友
 router.post('/api/contact', (req, res) => {
     const { fromUserId, toUserId } = req.body; // 从请求参数中获取用户ID并转换为整数
@@ -27,6 +32,17 @@ router.post('/api/contact', (req, res) => {
     if(fromUserContact && toUserContact){
         fromUserContact.addContact(toUserId); // 将toUserId添加到fromUserId的联系人列表中    
         toUserContact.addContact(fromUserId); // 将fromUserId添加到toUserId的联系人列表中
+
+        const fromSocket = getSocket(fromUserId); // 获取fromUserId的socket
+        const toSocket = getSocket(toUserId); // 获取toUserId的socket
+        if(fromSocket){
+            console.log('emit contactUpdated to', fromUserId)
+            fromSocket.emit('contactUpdated'); // 向fromUserId发送联系人更新事件
+        }
+        if(toSocket){
+            console.log('emit contactUpdated to', toUserId);
+            toSocket.emit('contactUpdated'); // 向toUserId发送联系人更新事件
+        }
     } else {
         console.log('contact adding failed: user not found')
         ok = false;
@@ -41,6 +57,9 @@ router.post('/api/contact', (req, res) => {
     }
 });
 
+
+
+
 // 删除好友
 router.delete('/api/contact', (req, res) => {
     const { fromUserId, toUserId } = req.body; // 从请求参数中获取用户ID并转换为整数
@@ -52,6 +71,17 @@ router.delete('/api/contact', (req, res) => {
     if(fromUserContact && toUserContact){
         fromUserContact.removeContact(toUserId); // 将toUserId添加到fromUserId的联系人列表中    
         toUserContact.removeContact(fromUserId); // 将fromUserId添加到toUserId的联系人列表中
+
+        const fromSocket = getSocket(fromUserId); // 获取fromUserId的socket
+        const toSocket = getSocket(toUserId); // 获取toUserId的socket
+        if(fromSocket){
+            console.log('emit contactUpdated to', fromUserId)
+            fromSocket.emit('contactUpdated'); // 向fromUserId发送联系人更新事件
+        }
+        if(toSocket){
+            console.log('emit contactUpdated to', toUserId);
+            toSocket.emit('contactUpdated'); // 向toUserId发送联系人更新事件
+        }
     } else {
         console.log('contact adding failed: user not found')
         ok = false;
