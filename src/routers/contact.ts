@@ -16,6 +16,60 @@ router.get('/api/contacts/:id', (req, res) => {
 })
 
 
+// 添加好友
+router.post('/api/contact', (req, res) => {
+    const { fromUserId, toUserId } = req.body; // 从请求参数中获取用户ID并转换为整数
+
+    let ok = true;
+
+    const fromUserContact = contacts.filter(c => c.userId === fromUserId)[0]; // 获取fromUserId的联系人列表
+    const toUserContact = contacts.filter(c => c.userId === toUserId)[0]; // 获取toUserId的联系人列表
+    if(fromUserContact && toUserContact){
+        fromUserContact.addContact(toUserId); // 将toUserId添加到fromUserId的联系人列表中    
+        toUserContact.addContact(fromUserId); // 将fromUserId添加到toUserId的联系人列表中
+    } else {
+        console.log('contact adding failed: user not found')
+        ok = false;
+    }
+
+    if (ok) {
+        console.log('contact added:', fromUserId, 'and', toUserId);
+        res.status(201).json({ message: ' successfully' }); // 返回成功信息
+    } else {
+        console.log('contact adding failed:', fromUserId, 'and', toUserId);
+        res.status(400).json({ message: 'adding failed' }); // 返回失败信息
+    }
+});
+
+// 删除好友
+router.delete('/api/contact', (req, res) => {
+    const { fromUserId, toUserId } = req.body; // 从请求参数中获取用户ID并转换为整数
+
+    let ok = true;
+
+    const fromUserContact = contacts.filter(c => c.userId === fromUserId)[0]; // 获取fromUserId的联系人列表
+    const toUserContact = contacts.filter(c => c.userId === toUserId)[0]; // 获取toUserId的联系人列表
+    if(fromUserContact && toUserContact){
+        fromUserContact.removeContact(toUserId); // 将toUserId添加到fromUserId的联系人列表中    
+        toUserContact.removeContact(fromUserId); // 将fromUserId添加到toUserId的联系人列表中
+    } else {
+        console.log('contact adding failed: user not found')
+        ok = false;
+    }
+
+    if (ok) {
+        console.log('contact removed:', fromUserId, 'and', toUserId);
+        res.status(201).json({ message: ' successfully' }); // 返回成功信息
+    } else {
+        console.log('contact removing failed:', fromUserId, 'and', toUserId);
+        res.status(400).json({ message: 'removing failed' }); // 返回失败信息
+    }
+});
+
+
+
+
+
 
 
 export default router;

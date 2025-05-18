@@ -12,6 +12,7 @@ const contacts: Contact[] = [
     new Contact('3', [
         '1',
     ]),
+    new Contact('11', []),
 ]
 
 
