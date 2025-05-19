@@ -1,18 +1,22 @@
 import { Router } from 'express';
 
 
-
-
 const router = Router();
 
 
+import { Contact } from '@/models/Contact'
 import { contacts } from '@/mocks/contacts'
 
+
+// 获取用户的联系人列表
 router.get('/api/contacts/:id', (req, res) => {
     const userId = req.params.id // 从请求参数中获取用户ID并转换为整数)
-    const contactIds = contacts.filter(c => c.userId === userId)[0].contactIds // 获取与该用户有联系的用户ID列表
-    console.log(`User ${userId} has contacts: ${contactIds}`); // 打印日志
-    res.send(contactIds) // 发送联系人ID列表
+    const result: Contact[] = []
+    if(userId in contacts){
+        result.push(...contacts[userId]) // 将该用户的联系人列表添加到结果数组中
+    }
+    console.log(`User ${userId} has contacts: ${result}`); // 打印日志
+    res.send(result.map(contact => contact.id)) // 发送联系人ID列表
 })
 
 
@@ -27,11 +31,11 @@ router.post('/api/contact', (req, res) => {
 
     let ok = true;
 
-    const fromUserContact = contacts.filter(c => c.userId === fromUserId)[0]; // 获取fromUserId的联系人列表
-    const toUserContact = contacts.filter(c => c.userId === toUserId)[0]; // 获取toUserId的联系人列表
-    if(fromUserContact && toUserContact){
-        fromUserContact.addContact(toUserId); // 将toUserId添加到fromUserId的联系人列表中    
-        toUserContact.addContact(fromUserId); // 将fromUserId添加到toUserId的联系人列表中
+    const fromUserContacts = contacts[fromUserId]; // 获取fromUserId的联系人列表
+    const toUserContacts = contacts[toUserId]; // 获取toUserId的联系人列表
+    if(fromUserContacts && toUserContacts){
+        fromUserContacts.push(new Contact(toUserId)); // 将toUserId添加到fromUserId的联系人列表中    
+        toUserContacts.push(new Contact(fromUserId)); // 将fromUserId添加到toUserId的联系人列表中
 
         const fromSocket = getSocket(fromUserId); // 获取fromUserId的socket
         const toSocket = getSocket(toUserId); // 获取toUserId的socket
@@ -66,11 +70,11 @@ router.delete('/api/contact', (req, res) => {
 
     let ok = true;
 
-    const fromUserContact = contacts.filter(c => c.userId === fromUserId)[0]; // 获取fromUserId的联系人列表
-    const toUserContact = contacts.filter(c => c.userId === toUserId)[0]; // 获取toUserId的联系人列表
-    if(fromUserContact && toUserContact){
-        fromUserContact.removeContact(toUserId); // 将toUserId添加到fromUserId的联系人列表中    
-        toUserContact.removeContact(fromUserId); // 将fromUserId添加到toUserId的联系人列表中
+    const fromUserContacts = contacts[fromUserId]; // 获取fromUserId的联系人列表
+    const toUserContacts = contacts[toUserId]; // 获取toUserId的联系人列表
+    if(fromUserContacts && toUserContacts){
+        fromUserContacts.splice(fromUserContacts.findIndex(contact => contact.id === toUserId)); // 将toUserId从fromUserId的联系人列表中移除
+        toUserContacts.splice(toUserContacts.findIndex(contact => contact.id === fromUserId)); // 将fromUserId从toUserId的联系人列表中移除
 
         const fromSocket = getSocket(fromUserId); // 获取fromUserId的socket
         const toSocket = getSocket(toUserId); // 获取toUserId的socket

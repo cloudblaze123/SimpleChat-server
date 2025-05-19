@@ -1,19 +1,19 @@
 import { Contact } from '@/models/Contact'
 
 
-const contacts: Contact[] = [
-    new Contact('1', [
-        '2',
-        '3',
-    ]),
-    new Contact('2', [
-        '1',
-    ]),
-    new Contact('3', [
-        '1',
-    ]),
-    new Contact('11', []),
-]
+const contacts: Record<string, Contact[]> = {
+    '1': [
+        new Contact('2'),
+        new Contact('3'),
+    ],
+    '2': [
+        new Contact('1'),
+    ],
+    '3': [
+        new Contact('1'),
+    ],
+    '11': [],
+}
 
 
 export { contacts }
