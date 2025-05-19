@@ -15,8 +15,8 @@ router.get('/api/contacts/:id', (req, res) => {
     if(userId in contacts){
         result.push(...contacts[userId]) // 将该用户的联系人列表添加到结果数组中
     }
-    console.log(`User ${userId} has contacts: ${result}`); // 打印日志
-    res.send(result.map(contact => contact.id)) // 发送联系人ID列表
+    console.log(`User ${userId} has contacts:`, result); // 打印日志
+    res.send(result) // 发送联系人ID列表
 })
 
 
@@ -73,8 +73,8 @@ router.delete('/api/contact', (req, res) => {
     const fromUserContacts = contacts[fromUserId]; // 获取fromUserId的联系人列表
     const toUserContacts = contacts[toUserId]; // 获取toUserId的联系人列表
     if(fromUserContacts && toUserContacts){
-        fromUserContacts.splice(fromUserContacts.findIndex(contact => contact.id === toUserId)); // 将toUserId从fromUserId的联系人列表中移除
-        toUserContacts.splice(toUserContacts.findIndex(contact => contact.id === fromUserId)); // 将fromUserId从toUserId的联系人列表中移除
+        fromUserContacts.splice(fromUserContacts.findIndex(contact => contact.id === toUserId), 1); // 将toUserId从fromUserId的联系人列表中移除
+        toUserContacts.splice(toUserContacts.findIndex(contact => contact.id === fromUserId), 1); // 将fromUserId从toUserId的联系人列表中移除
 
         const fromSocket = getSocket(fromUserId); // 获取fromUserId的socket
         const toSocket = getSocket(toUserId); // 获取toUserId的socket
