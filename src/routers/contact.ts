@@ -22,7 +22,7 @@ router.get('/api/contacts/:id', (req, res) => {
 
 
 
-import { getSocket } from '@/stores/socket';
+import { socketManager } from '@/sockets/socketManager';
 
 
 // 添加好友
@@ -37,16 +37,8 @@ router.post('/api/contact', (req, res) => {
         fromUserContacts.push(new Contact(toUserId)); // 将toUserId添加到fromUserId的联系人列表中    
         toUserContacts.push(new Contact(fromUserId)); // 将fromUserId添加到toUserId的联系人列表中
 
-        const fromSocket = getSocket(fromUserId); // 获取fromUserId的socket
-        const toSocket = getSocket(toUserId); // 获取toUserId的socket
-        if(fromSocket){
-            console.log('emit contactUpdated to', fromUserId)
-            fromSocket.emit('contactUpdated'); // 向fromUserId发送联系人更新事件
-        }
-        if(toSocket){
-            console.log('emit contactUpdated to', toUserId);
-            toSocket.emit('contactUpdated'); // 向toUserId发送联系人更新事件
-        }
+        socketManager.broadcast(fromUserId, 'contactUpdated'); // 向fromUserId发送联系人更新事件
+        socketManager.broadcast(toUserId, 'contactUpdated'); // 向toUserId发送联系人更新事件
     } else {
         console.log('contact adding failed: user not found')
         ok = false;
@@ -75,17 +67,9 @@ router.delete('/api/contact', (req, res) => {
     if(fromUserContacts && toUserContacts){
         fromUserContacts.splice(fromUserContacts.findIndex(contact => contact.id === toUserId), 1); // 将toUserId从fromUserId的联系人列表中移除
         toUserContacts.splice(toUserContacts.findIndex(contact => contact.id === fromUserId), 1); // 将fromUserId从toUserId的联系人列表中移除
-
-        const fromSocket = getSocket(fromUserId); // 获取fromUserId的socket
-        const toSocket = getSocket(toUserId); // 获取toUserId的socket
-        if(fromSocket){
-            console.log('emit contactUpdated to', fromUserId)
-            fromSocket.emit('contactUpdated'); // 向fromUserId发送联系人更新事件
-        }
-        if(toSocket){
-            console.log('emit contactUpdated to', toUserId);
-            toSocket.emit('contactUpdated'); // 向toUserId发送联系人更新事件
-        }
+        
+        socketManager.broadcast(fromUserId, 'contactUpdated'); // 向fromUserId发送联系人更新事件
+        socketManager.broadcast(toUserId, 'contactUpdated'); // 向toUserId发送联系人更新事件
     } else {
         console.log('contact adding failed: user not found')
         ok = false;

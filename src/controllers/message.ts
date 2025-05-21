@@ -1,5 +1,5 @@
 import { messageStore } from "@/stores/message";
-import { socketStore } from "@/stores/socket";
+import { socketManager } from "@/sockets/socketManager";
 
 
 
@@ -9,17 +9,8 @@ function initMessageHandler() {
     messageStore.on("messageAdded", (message) => {
         const { senderId, receiverId} = message;
         
-        // 使用 socket 通知用户更新数据
-        // console.log(socketStore)
-        if (socketStore[senderId]) {
-            console.log(`user ${senderId} online, emit messageAdded`);
-            socketStore[senderId].emit("messageAdded");
-        }
-        if (socketStore[receiverId]) {
-            console.log(`user ${receiverId} online, emit messageAdded`);
-            socketStore[receiverId].emit("messageAdded");
-        }
-        
+        socketManager.broadcast(receiverId, "messageAdded");
+        socketManager.broadcast(senderId, "messageAdded");        
     });
 }
 
