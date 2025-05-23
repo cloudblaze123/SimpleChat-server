@@ -6,6 +6,7 @@ import { socketManager } from "@/sockets/socketManager";
 
 
 function initUserHandler(socket: Socket) {
+    // 【已弃用】，将在 api v4.0 中移除
     // 处理用户切换事件
     // id 可以为空字符串
     socket.on("switchUser", (data:{oldUserId: string, newUserId: string}) => {
