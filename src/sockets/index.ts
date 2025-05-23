@@ -4,6 +4,7 @@ import http from 'http';
 import { socketManager } from '@/sockets/socketManager';
 
 import { initUserHandler } from '@/sockets/user';
+import { initVideoCallHandler } from '@/sockets/videoCall';
 
 
 
@@ -21,9 +22,11 @@ const initSocket = (server: http.Server) => {
         console.log('connected User ID:', userId);
         socketManager.addSocket(userId, socket);
 
+        
         // 监听消息事件
         initUserHandler(socket);
-        
+        initVideoCallHandler(socket);
+
         
         socket.on('disconnect', () => {
             console.log('User disconnected:', socket.id);
