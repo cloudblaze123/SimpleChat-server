@@ -20,6 +20,8 @@ const initSocket = (server: http.Server) => {
     io.on('connection', (socket) => {
         const { userId } = socket.handshake.auth;
         console.log('connected User ID:', userId);
+        
+        socket.data.userId = userId;
         socketManager.addSocket(userId, socket);
 
         

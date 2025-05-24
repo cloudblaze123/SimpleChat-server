@@ -6,25 +6,22 @@ import { socketManager } from "@/sockets/socketManager";
 
 
 function initVideoCallHandler(socket: Socket) {
-    socket.on("videoCallRequested", (data: { senderId: string, receiverId: string }) => {
-        const { senderId, receiverId } = data;
-
+    socket.on("videoCallRequested", (receiverId: string) => {
+        const senderId = socket.data.userId as string
         console.log("User", senderId, "requested video call to", receiverId);
-        socketManager.broadcast(receiverId, "videoCallRequested", data);
+        socketManager.broadcast(receiverId, "videoCallRequested", senderId);
     });
 
-    socket.on("videoCallRejected", (data: { senderId: string, receiverId: string }) => {
-        const { senderId, receiverId } = data;
-
+    socket.on("videoCallRejected", (receiverId: string) => {
+        const senderId = socket.data.userId as string
         console.log("User", receiverId, "rejected video call from", senderId);
-        socketManager.broadcast(senderId, "videoCallRejected", data);
+        socketManager.broadcast(receiverId, "videoCallRejected", senderId);
     });
 
-    socket.on("videoCallAccepted", (data: { senderId: string, receiverId: string }) => {
-        const { senderId, receiverId } = data;
-
+    socket.on("videoCallAccepted", (receiverId: string) => {
+        const senderId = socket.data.userId as string
         console.log("User", receiverId, "accepted video call from", senderId);
-        socketManager.broadcast(senderId, "videoCallAccepted", data);
+        socketManager.broadcast(receiverId, "videoCallAccepted", senderId);
     });
 
 
