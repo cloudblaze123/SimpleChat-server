@@ -25,14 +25,6 @@ function initVideoCallHandler(socket: Socket) {
     });
 
 
-    // rtc
-    // 处理加入房间的请求
-    // 【已弃用】
-    socket.on('join', (room) => {
-        socket.join(room);
-        console.log(`用户 ${socket.id} 加入了房间 ${room}`);
-    });
-
     // 处理信令消息
     socket.on('signal', (receiverId, data) => {
         const senderId = socket.data.userId as string;

@@ -3,7 +3,6 @@ import http from 'http';
 
 import { socketManager } from '@/sockets/socketManager';
 
-import { initUserHandler } from '@/sockets/user';
 import { initVideoCallHandler } from '@/sockets/videoCall';
 
 
@@ -20,13 +19,12 @@ const initSocket = (server: http.Server) => {
     io.on('connection', (socket) => {
         const { userId } = socket.handshake.auth;
         console.log('connected User ID:', userId);
-        
+
         socket.data.userId = userId;
         socketManager.addSocket(userId, socket);
 
         
         // 监听消息事件
-        initUserHandler(socket);
         initVideoCallHandler(socket);
 
         
