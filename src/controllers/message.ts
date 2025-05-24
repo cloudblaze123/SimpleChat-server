@@ -1,5 +1,5 @@
 import { messageStore } from "@/stores/message";
-import { socketManager } from "@/sockets/socketManager";
+import { socketManager } from "@/sockets/socket-manager";
 
 
 

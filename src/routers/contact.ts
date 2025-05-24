@@ -22,7 +22,7 @@ router.get('/api/contacts/:id', (req, res) => {
 
 
 
-import { socketManager } from '@/sockets/socketManager';
+import { socketManager } from '@/sockets/socket-manager';
 
 
 // 添加好友

@@ -1,9 +1,9 @@
 import { Server as SocketIOServer } from 'socket.io';
 import http from 'http';
 
-import { socketManager } from '@/sockets/socketManager';
+import { socketManager } from '@/sockets/socket-manager';
 
-import { initVideoCallHandler } from '@/sockets/videoCall';
+import { initVideoCallHandler } from '@/sockets/video-call';
 
 
 

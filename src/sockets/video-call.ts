@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 
-import { socketManager } from "@/sockets/socketManager";
+import { socketManager } from "@/sockets/socket-manager";
 
 
 
