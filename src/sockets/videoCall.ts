@@ -27,15 +27,17 @@ function initVideoCallHandler(socket: Socket) {
 
     // rtc
     // 处理加入房间的请求
+    // 【已弃用】
     socket.on('join', (room) => {
         socket.join(room);
         console.log(`用户 ${socket.id} 加入了房间 ${room}`);
     });
 
     // 处理信令消息
-    socket.on('signal', (data) => {
-        // 将消息转发给房间内的其他用户
-        socket.to(data.room).emit('signal', data);
+    socket.on('signal', (receiverId, data) => {
+        const senderId = socket.data.userId as string;
+        console.log(senderId, '发给', receiverId, '信令消息', data.type);
+        socketManager.broadcast(receiverId, "signal", senderId, data);
     });
 }
 

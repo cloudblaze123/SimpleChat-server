@@ -54,13 +54,13 @@ class SocketManager {
     }
 
 
-    broadcast(userId: string, event: string, data: any = {}): void {
+    broadcast(userId: string, event: string, ...data: any[]): void {
         const sockets = this.getSocketsOfUser(userId);
         if (sockets.length === 0) {
             return;
         }
         sockets.forEach(socket => {
-            socket.emit(event, data);
+            socket.emit(event, ...data);
         });
     }
 }
