@@ -24,6 +24,12 @@ function initVideoCallHandler(socket: Socket) {
         socketManager.broadcast(receiverId, "videoCallAccepted", senderId);
     });
 
+    socket.on("videoCallEnded", (receiverId: string) => {
+        const senderId = socket.data.userId as string
+        console.log("User", receiverId, "ended video call from", senderId);
+        socketManager.broadcast(receiverId, "videoCallEnded", senderId);
+    });
+
 
     // 处理信令消息
     socket.on('signal', (receiverId, data) => {
