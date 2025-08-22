@@ -26,13 +26,23 @@ app.use(logUrlAccessInfoMiddleware);
 // 配置路由
 
 // 用来测试的路由
-app.get('/api/hello', (req, res) => {
+app.get('/api/hello', (req: Request, res: Response) => {
     res.send('Hello World!');
 });
 
 
 
 
-app.listen(port, () => {
+// 配置 socket 服务
+import { createServer } from "http";
+const httpServer = createServer(app);
+
+import { initSocket } from "@/socket";
+initSocket(httpServer)
+
+
+
+
+httpServer.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
