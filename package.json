@@ -1,0 +1,12 @@
+{
+  "name": "simplechat-server",
+  "version": "0.1",
+  "main": "main.ts",
+  "scripts": {
+    "dev": "tsx watch main.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.4",
+    "typescript": "^5.9.2"
+  }
+}
